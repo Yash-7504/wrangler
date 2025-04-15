@@ -33,6 +33,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import io.cdap.wrangler.api.parser.ByteSize;
+import io.cdap.wrangler.api.parser.TimeDuration;
+
+
 /**
  * This class <code>GrammarBasedParser</code> is an implementation of <code>RecipeParser</code>.
  * It's responsible for compiling the recipe and checking all the directives exist before concluding
@@ -100,4 +104,40 @@ public class GrammarBasedParser implements RecipeParser {
       throw new RecipeException(e.getMessage(), e);
     }
   }
+  @Override
+  public TokenGroup visitValue(DirectivesParser.ValueContext ctx) {
+    if (ctx.INTEGER() != null) {
+      // Handle INTEGER case
+    } else if (ctx.DECIMAL() != null) {
+      // Handle DECIMAL case
+    } else if (ctx.STRING() != null) {
+      // Handle STRING case
+    } else if (ctx.IDENTIFIER() != null) {
+      // Handle IDENTIFIER case
+    } else if (ctx.BYTE_SIZE() != null) {
+      String text = ctx.getText();
+      tokens.add(new ByteSize(text));
+    } else if (ctx.TIME_DURATION() != null) {
+      String text = ctx.getText();
+      tokens.add(new TimeDuration(text));
+    }
+    return tokens;
+  }
+
+  @Override
+  public TokenGroup visitByteSizeArg(DirectivesParser.ByteSizeArgContext ctx) {
+    String text = ctx.BYTE_SIZE().getText();
+    tokens.add(new ByteSize(text));
+    return tokens;
+  }
+
+
+  @Override
+  public TokenGroup visitTimeDurationArg(DirectivesParser.TimeDurationArgContext ctx) {
+    String text = ctx.TIME_DURATION().getText();
+    tokens.add(new TimeDuration(text));
+    return tokens;
+  }
+
+  
 }

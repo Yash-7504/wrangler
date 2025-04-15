@@ -64,6 +64,8 @@ directive
     | stringList
     | numberRanges
     | properties
+    | byteSize
+    | timeDuration
   )*?
   ;
 
@@ -140,7 +142,15 @@ numberRange
  ;
 
 value
- : String | Number | Column | Bool
+ : String | Number | Column | Bool | BYTE_SIZE | TIME_DURATION
+ ;
+
+byteSize
+ : BYTE_SIZE
+ ;
+
+timeDuration
+ : TIME_DURATION
  ;
 
 ecommand
@@ -267,6 +277,26 @@ Macro
 
 Column
  : ':' [a-zA-Z_\-] [:a-zA-Z_0-9\-]*
+ ;
+
+// New token for byte sizes
+BYTE_SIZE
+ : (Number) BYTE_UNIT
+ ;
+
+// New token for time durations
+TIME_DURATION
+ : (Number) TIME_UNIT
+ ;
+
+// Helper fragments for byte units
+fragment BYTE_UNIT
+ : ('b'|'B'|'kb'|'KB'|'mb'|'MB'|'gb'|'GB'|'tb'|'TB'|'pb'|'PB')
+ ;
+
+// Helper fragments for time units
+fragment TIME_UNIT
+ : ('ns'|'ms'|'s'|'m'|'h'|'d')
  ;
 
 String
